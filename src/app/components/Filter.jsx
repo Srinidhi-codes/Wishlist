@@ -2,28 +2,43 @@
 import React, { useState } from 'react';
 import ImageView from './ImageView';
 import Select from './Select';
-import ReactDatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { DatePicker } from 'antd';
 import InputField from './InputField';
 import { TableData } from "../constants/TableData";
+import moment from 'moment';
 
-const Filter = () => {
+
+const Filter = ({ applyFilters, setShowFilter }) => {
     const [filterMethod, selectFilterMethod] = useState("Scheduled Date")
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [searchPayer, setSearchPayer] = useState("");
     const [searchService, setSearchService] = useState("");
     const [serviceType, setServiceType] = useState("");
     const [order, setOrder] = useState("");
-    const [status, setStatus] = useState("");
+    const [serviceStatus, setServiceStatus] = useState("");
+    console.log(startDate)
+    const applyFiltersHandler = () => {
+        applyFilters({
+            startDate,
+            endDate,
+            searchPayer,
+            searchService,
+            serviceType,
+            order,
+            serviceStatus
+        });
+        setShowFilter(false)
+    };
+
     const resetFilters = () => {
-        setStartDate(null);
-        setEndDate(null);
+        setStartDate("");
+        setEndDate("");
         setSearchPayer("");
         setSearchService("");
         setServiceType("");
-        setStatus("");
+        setServiceStatus("");
         selectFilterMethod("Scheduled Date");
     };
 
@@ -53,13 +68,18 @@ const Filter = () => {
                         </li>
                     ))}
                 </ul>
-                {filterMethod === "Scheduled Date" && <ScheduledDate />}
+                {filterMethod === "Scheduled Date" && <ScheduledDate startDate={startDate}
+                    setStartDate={setStartDate}
+                    endDate={endDate}
+                    setEndDate={setEndDate}
+                    order={order}
+                    setOrder={setOrder} />}
                 {filterMethod === "People" && <People searchPayer={searchPayer} setSearchPayer={setSearchPayer} />}
-                {filterMethod === "Services/Products" && <Services searchService={searchService} setSearchService={setSearchService} />}
+                {filterMethod === "Services/Products" && <Services searchService={searchService} setSearchService={setSearchService} serviceType={serviceType} setServiceType={setServiceType} setServiceStatus={setServiceStatus} serviceStatus={serviceStatus} />}
             </div>
             <div className='border-t flex justify-end px-2 gap-x-4 p-2 bg-white'>
                 <button onClick={resetFilters} className='bg-[#F4F4F5] text-[14px] font-medium px-3 py-2 rounded-lg'>Reset to default</button>
-                <button className='text-white text-[14px] font-medium bg-black px-4 py-2 rounded-lg'>Apply</button>
+                <button onClick={applyFiltersHandler} className='text-white text-[14px] font-medium bg-black px-4 py-2 rounded-lg'>Apply</button>
             </div>
         </div>
     );
@@ -92,17 +112,17 @@ export const ScheduledDate = ({ startDate, setStartDate, endDate, setEndDate, or
                     <div className='flex flex-col gap-2 '>
                         <label className='text-[12px] font-medium'>From</label>
                         <DatePicker
-                            selected={startDate}
+                            value={startDate ? moment(startDate) : null}
                             placeholder='Pick a date'
-                            onChange={date => setStartDate(date)}
+                            onChange={(date) => setStartDate(date ? date.toDate() : null)}
                             className="w-[150px] h-[40px] text-[18px] rounded-lg border placeholder:text-[1rem] placeholder:text-black"
                         />
                     </div>
                     <div className='flex flex-col gap-2'>
                         <label className='text-[12px] font-medium'>To</label>
                         <DatePicker
-                            selected={endDate}
-                            onChange={date => setEndDate(date)}
+                            value={endDate ? moment(endDate) : null}
+                            onChange={(date) => setEndDate(date ? date.toDate() : null)}
                             placeholder='Pick a date'
                             className="w-[150px] h-[40px] text-[18px] rounded-lg border placeholder:text-[1rem] placeholder:text-black"
                         />
@@ -142,7 +162,7 @@ const People = ({ searchPayer, setSearchPayer }) => (
     </div>
 );
 
-export const Services = ({ searchService, setSearchService }) => {
+export const Services = ({ searchService, setSearchService, serviceType, setServiceType, serviceStatus, setServiceStatus }) => {
     const [searchType, setSearchType] = useState("name");
 
     return (
@@ -206,7 +226,7 @@ export const Services = ({ searchService, setSearchService }) => {
                             <label className='text-[12px] font-medium'>Service type</label>
                             <Select
                                 name="serviceType"
-                                // value={}
+                                value={serviceType}
                                 placeholder="Show all service type"
                                 className="w-[350px] h-[40px] border border-[#E4E4E7] rounded-lg "
                                 options={[
@@ -218,14 +238,14 @@ export const Services = ({ searchService, setSearchService }) => {
                                     { label: "Membership", value: "Membership" },
                                     { label: "General items", value: "General items" },
                                 ]}
-                            // onChange={handleChange}
+                                onChange={e => setServiceType(e.target.value)}
                             />
                         </div>
                         <div className='flex flex-col gap-y-2'>
                             <label className='text-[12px] font-medium'>Status</label>
                             <Select
                                 name="status"
-                                // value={}
+                                value={serviceStatus}
                                 placeholder="Select service type"
                                 className="w-[350px] h-[40px] border border-[#E4E4E7] rounded-lg "
                                 options={[
@@ -235,7 +255,7 @@ export const Services = ({ searchService, setSearchService }) => {
                                     { label: "Disable", value: "Disable" },
                                     { label: "Draft", value: "Draft" },
                                 ]}
-                            // onChange={handleChange}
+                                onChange={e => setServiceStatus(e.target.value)}
                             />
                         </div>
                     </>
