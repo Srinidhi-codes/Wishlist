@@ -43,9 +43,9 @@ export default function Sidebar() {
   return (
     <aside className={`shadow-sidebar h-full font-secondary-font bg-[#F8FAFC] custom-scrollbar flex items-center flex-col gap-2 px-5 py-5 ${toggleSidebar ? "w-20" : "w-72"}`}>
       <header className={`flex ${toggleSidebar ? "justify-center" : "justify-between"} w-full py-5`}>
-        <ImageView onClick={() => setToggleSidebar(false)} width={22} height={22} src={"/assets/logo.svg"} />
+        <ImageView className="cursor-pointer" onClick={() => setToggleSidebar(false)} width={22} height={22} src={"/assets/logo.svg"} />
         {!toggleSidebar && <><h3 className='text-[18px] font-bold flex gap-4 text-nowrap mr-5'>Front-Desk</h3>
-          <ImageView onClick={() => setToggleSidebar(true)} width={20} height={16} src={"/assets/toggleSidebar.svg"} /></>}
+          <ImageView className="cursor-pointer" onClick={() => setToggleSidebar(true)} width={20} height={16} src={"/assets/toggleSidebar.svg"} /></>}
       </header>
 
       <div className="flex justify-between w-full bg-white p-2 rounded-md shadow-md">
