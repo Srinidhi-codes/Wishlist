@@ -5,6 +5,7 @@ export default function InputField({
     placeholder,
     onChange,
     className,
+    ...props
 }) {
     return (
         <input
@@ -15,6 +16,7 @@ export default function InputField({
             className={`w-full ${className ? className : null
                 } bg-white outline-none text-black rounded-lg pl-2`}
             onChange={onChange}
+            {...props}
         />
     );
 }
