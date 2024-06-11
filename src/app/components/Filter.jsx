@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import React, { useState } from 'react';
 import ImageView from './ImageView';
 import Select from './Select';
@@ -7,10 +7,10 @@ import { DatePicker } from 'antd';
 import InputField from './InputField';
 import { TableData } from "../constants/TableData";
 import moment from 'moment';
-
+import ClickAwayListener from 'react-click-away-listener';
 
 const Filter = ({ applyFilters, setShowFilter }) => {
-    const [filterMethod, selectFilterMethod] = useState("Scheduled Date")
+    const [filterMethod, selectFilterMethod] = useState("Scheduled Date");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [searchPayer, setSearchPayer] = useState("");
@@ -18,18 +18,19 @@ const Filter = ({ applyFilters, setShowFilter }) => {
     const [serviceType, setServiceType] = useState("");
     const [order, setOrder] = useState("");
     const [serviceStatus, setServiceStatus] = useState("");
-    console.log(startDate)
+    const [selectedPayers, setSelectedPayers] = useState([]);
+
     const applyFiltersHandler = () => {
         applyFilters({
             startDate,
             endDate,
-            searchPayer,
+            searchPayer: selectedPayers.join(", "),
             searchService,
             serviceType,
             order,
             serviceStatus
         });
-        setShowFilter(false)
+        setShowFilter(false);
     };
 
     const resetFilters = () => {
@@ -39,7 +40,18 @@ const Filter = ({ applyFilters, setShowFilter }) => {
         setSearchService("");
         setServiceType("");
         setServiceStatus("");
+        setSelectedPayers([]);
         selectFilterMethod("Scheduled Date");
+    };
+
+    const handlePayerCheckboxChange = (payer) => {
+        setSelectedPayers((prevSelected) => {
+            if (prevSelected.includes(payer)) {
+                return prevSelected.filter((item) => item !== payer);
+            } else {
+                return [...prevSelected, payer];
+            }
+        });
     };
 
     const filterType = [
@@ -58,30 +70,32 @@ const Filter = ({ applyFilters, setShowFilter }) => {
     ];
 
     return (
-        <div className='w-[612px] h-[400px] bg-white absolute top-[2.5rem] left-0 shadow-2xl'>
-            <div className='flex h-full'>
-                <ul className='bg-[#F8FAFC] p-2 border-r'>
-                    {filterType.map((item) => (
-                        <li onClick={() => selectFilterMethod(item.data)} className={`flex cursor-pointer gap-2 w-[250px] p-2 rounded-lg text-[14px] font-medium ${filterMethod === item.data ? "bg-[#E2E8F0]" : ""}`} key={item.data}>
-                            <ImageView width={16} height={16} src={item.icon} />
-                            {item.data}
-                        </li>
-                    ))}
-                </ul>
-                {filterMethod === "Scheduled Date" && <ScheduledDate startDate={startDate}
-                    setStartDate={setStartDate}
-                    endDate={endDate}
-                    setEndDate={setEndDate}
-                    order={order}
-                    setOrder={setOrder} />}
-                {filterMethod === "People" && <People searchPayer={searchPayer} setSearchPayer={setSearchPayer} />}
-                {filterMethod === "Services/Products" && <Services searchService={searchService} setSearchService={setSearchService} serviceType={serviceType} setServiceType={setServiceType} setServiceStatus={setServiceStatus} serviceStatus={serviceStatus} />}
+        <ClickAwayListener onClickAway={() => setShowFilter(false)}>
+            <div className='w-[612px] h-[400px] bg-white absolute top-[2.5rem] left-0 shadow-2xl'>
+                <div className='flex h-full'>
+                    <ul className='bg-[#F8FAFC] p-2 border-r'>
+                        {filterType.map((item) => (
+                            <li onClick={() => selectFilterMethod(item.data)} className={`flex cursor-pointer gap-2 w-[250px] p-2 rounded-lg text-[14px] font-medium ${filterMethod === item.data ? "bg-[#E2E8F0]" : ""}`} key={item.data}>
+                                <ImageView width={16} height={16} src={item.icon} />
+                                {item.data}
+                            </li>
+                        ))}
+                    </ul>
+                    {filterMethod === "Scheduled Date" && <ScheduledDate startDate={startDate}
+                        setStartDate={setStartDate}
+                        endDate={endDate}
+                        setEndDate={setEndDate}
+                        order={order}
+                        setOrder={setOrder} />}
+                    {filterMethod === "People" && <People searchPayer={searchPayer} setSearchPayer={setSearchPayer} selectedPayers={selectedPayers} handlePayerCheckboxChange={handlePayerCheckboxChange} />}
+                    {filterMethod === "Services/Products" && <Services searchService={searchService} setSearchService={setSearchService} serviceType={serviceType} setServiceType={setServiceType} setServiceStatus={setServiceStatus} serviceStatus={serviceStatus} />}
+                </div>
+                <div className='border-t flex justify-end px-2 gap-x-4 p-2 bg-white'>
+                    <button onClick={resetFilters} className='bg-[#F4F4F5] text-[14px] font-medium px-3 py-2 rounded-lg'>Reset to default</button>
+                    <button onClick={applyFiltersHandler} className='text-white text-[14px] font-medium bg-black px-4 py-2 rounded-lg'>Apply</button>
+                </div>
             </div>
-            <div className='border-t flex justify-end px-2 gap-x-4 p-2 bg-white'>
-                <button onClick={resetFilters} className='bg-[#F4F4F5] text-[14px] font-medium px-3 py-2 rounded-lg'>Reset to default</button>
-                <button onClick={applyFiltersHandler} className='text-white text-[14px] font-medium bg-black px-4 py-2 rounded-lg'>Apply</button>
-            </div>
-        </div>
+        </ClickAwayListener>
     );
 };
 
@@ -133,7 +147,7 @@ export const ScheduledDate = ({ startDate, setStartDate, endDate, setEndDate, or
     )
 }
 
-const People = ({ searchPayer, setSearchPayer }) => (
+const People = ({ searchPayer, setSearchPayer, selectedPayers, handlePayerCheckboxChange }) => (
     <div className='flex flex-col gap-y-2 p-4 w-full relative'>
         <ImageView src="/assets/search.svg" alt="filter" className="absolute top-[21px] left-6" width={16} height={20} />
         <InputField
@@ -149,8 +163,9 @@ const People = ({ searchPayer, setSearchPayer }) => (
                     <div key={data.id} className='flex items-center gap-x-2'>
                         <input
                             type="checkbox"
-                            name={`myCheckbox`}
-                            value="true"
+                            name={`payer-${data.id}`}
+                            checked={selectedPayers.includes(data.payer)}
+                            onChange={() => handlePayerCheckboxChange(data.payer)}
                             className="bg-transparent w-3 h-3 cursor-pointer border-2 border-red-1000"
                         />
                         <p className='text-[14px] font-medium'>{data.payer}</p>
@@ -171,7 +186,7 @@ export const Services = ({ searchService, setSearchService, serviceType, setServ
                 <label className="flex items-center">
                     <InputField
                         type="radio"
-                        name="selectAllCheckbox"
+                        name="searchType"
                         value="name"
                         checked={searchType === "name"}
                         onChange={() => setSearchType("name")}
@@ -182,7 +197,7 @@ export const Services = ({ searchService, setSearchService, serviceType, setServ
                 <label className="flex items-center">
                     <InputField
                         type="radio"
-                        name="selectAllCheckbox"
+                        name="searchType"
                         value="tags"
                         checked={searchType === "tags"}
                         onChange={() => setSearchType("tags")}
@@ -191,7 +206,7 @@ export const Services = ({ searchService, setSearchService, serviceType, setServ
                     <span className="ml-2 text-nowrap">Search by tags</span>
                 </label>
             </div>
-            <div className='flex flex-col gap-y-2 relative  overflow-y-scroll'>
+            <div className='flex flex-col gap-y-2 relative'>
                 {searchType === "name" ? (
                     <>
                         <InputField
@@ -203,7 +218,7 @@ export const Services = ({ searchService, setSearchService, serviceType, setServ
                         />
                         <ImageView src="/assets/search.svg" alt="filter" className="absolute top-1 left-2" width={18} height={20} />
                         {searchService && (
-                            <div className='flex flex-col gap-y-2 items-start text-[#374151] px-2'>
+                            <div className='flex flex-col gap-y-2 items-start text-[#374151] px-2 h-[18rem] overflow-y-scroll'>
                                 {TableData.filter(data => data.services.toLowerCase().includes(searchService.toLowerCase())).map(data => (
                                     <div key={data.id} className='flex items-center gap-x-2 w-full'>
                                         <input

@@ -59,10 +59,10 @@ const Table = () => {
         const indexOfLastItem = currentPage * itemsPerPage;
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
         const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-        if (filteredData.length && currentItems.length === 0) {
+        if (filteredData.length === 0) {
             return (
                 <tr>
-                    <td colSpan={selectedColumns.length} className="text-center">
+                    <td colSpan={selectedColumns.length} className="text-center font-semibold text-[1.5rem] my-auto h-[50vh]">
                         No Data Available for selected filter.
                     </td>
                 </tr>
@@ -81,7 +81,7 @@ const Table = () => {
                             type="checkbox"
                             name={`checkbox-${data.id}`}
                             value="true"
-                            className="bg-transparent h-3 cursor-pointer border-2 border-red-1000"
+                            className="bg-transparent h-3 cursor-pointer border-2 border-red-100"
                         />
                     </td>
                     {columnsToRender.map((key) => {
@@ -138,7 +138,7 @@ const Table = () => {
                                     type="checkbox"
                                     name={`checkbox`}
                                     value="true"
-                                    className="bg-transparent h-3  cursor-pointer border-2 border-red-1000"
+                                    className="bg-transparent h-3 cursor-pointer border-2 border-red-1000"
                                 />
                             </th>
                             {selectedColumns.map(column => (
@@ -196,7 +196,7 @@ const Pagination = ({ itemsPerPage, totalItems, paginate, currentPage }) => {
                             </li>
                         ))}
                     </ul>
-                    <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === 3} className='flex items-center gap-x-4'>
+                    <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === 2} className='flex items-center gap-x-4'>
                         <p>Next</p>
                         <ImageView src="/assets/rightArrow.svg" alt={"rightArrow"} width={10} height={40} />
                     </button>
@@ -227,10 +227,10 @@ export const TableHeader = ({ searchPayer, setSearchPayer, handleColumnSelection
                     {showFilter && <Filter applyFilters={applyFilters} setShowFilter={setShowFilter} />}
                 </div>
                 <div className='flex gap-x-3 relative'>
-                    <InputField placeholder={"Search client"} value={searchPayer} onChange={(e) => setSearchPayer(e.target.value)} className={"rounded-md shadow-sm pl-12"} />
-                    <ImageView src="/assets/search.svg" alt="filter" className="absolute top-2 left-3" width={18} height={20} />
-                    <ImageView onClick={() => setFilteredData(TableData)} src="/assets/refresh.svg" alt="filter" width={40} height={20} />
-                    <ImageView onClick={() => setShowColumn(!showColumn)} src="/assets/column.svg" alt="filter" width={40} height={20} />
+                    <InputField placeholder={"Search client"} value={searchPayer} onChange={(e) => setSearchPayer(e.target.value)} className={"rounded-md shadow-sm p-1 pl-9"} />
+                    <ImageView src="/assets/search.svg" alt="filter" className="absolute top-[0.6rem] left-3" width={15} height={20} />
+                    <ImageView onClick={() => setFilteredData(TableData)} src="/assets/refresh.svg" className="cursor-pointer" alt="filter" width={40} height={20} />
+                    <ImageView onClick={() => setShowColumn(!showColumn)} src="/assets/column.svg" className="cursor-pointer" alt="filter" width={40} height={20} />
                     {showColumn && <EditColumn handleColumnSelection={handleColumnSelection} selectedColumns={selectedColumns} setShowColumn={setShowColumn} />}
                     <ImageView src="/assets/download.svg" alt="filter" width={40} height={20} />
                 </div>
