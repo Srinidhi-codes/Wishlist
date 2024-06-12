@@ -71,13 +71,13 @@ const Filter = ({ applyFilters, setShowFilter }) => {
 
     return (
         <ClickAwayListener onClickAway={() => setShowFilter(false)}>
-            <div className='w-[612px] h-[400px] bg-white absolute top-[2.5rem] left-0 shadow-2xl'>
+            <div className='lg:w-[612px] w-[290px] h-[400px] bg-white absolute top-[2.5rem] lg:left-0 -left-3 shadow-2xl z-50'>
                 <div className='flex h-full'>
                     <ul className='bg-[#F8FAFC] p-2 border-r'>
                         {filterType.map((item) => (
-                            <li onClick={() => selectFilterMethod(item.data)} className={`flex cursor-pointer gap-2 w-[250px] p-2 rounded-lg text-[14px] font-medium ${filterMethod === item.data ? "bg-[#E2E8F0]" : ""}`} key={item.data}>
+                            <li onClick={() => selectFilterMethod(item.data)} className={`flex cursor-pointer gap-2 lg:w-[250px] w-[30px] p-2 rounded-lg text-[14px] font-medium ${filterMethod === item.data ? "bg-[#E2E8F0]" : ""}`} key={item.data}>
                                 <ImageView width={16} height={16} src={item.icon} />
-                                {item.data}
+                                <p className='lg:flex hidden'>{item.data}</p>
                             </li>
                         ))}
                     </ul>
@@ -105,12 +105,12 @@ export const ScheduledDate = ({ startDate, setStartDate, endDate, setEndDate, or
     return (
         <>
             <div className='flex flex-col p-3 gap-2'>
-                <label className='text-[12px] font-medium'>Show orders for</label>
+                <label className='text-[12px] font-medium w-fit'>Show orders for</label>
                 <Select
                     name="orders"
                     value={order}
                     placeholder="All"
-                    className="w-[350px] h-[40px] border border-[#E4E4E7] rounded-lg "
+                    className="lg:w-[350px] w-[225px] h-[40px] border border-[#E4E4E7] rounded-lg "
                     options={[
                         { label: "All", value: "All" },
                         { label: "Custom", value: "Custom" },
@@ -122,7 +122,7 @@ export const ScheduledDate = ({ startDate, setStartDate, endDate, setEndDate, or
                     ]}
                     onChange={value => setOrder(value)}
                 />
-                <div className='flex gap-[19px]'>
+                <div className='flex lg:flex-row flex-col gap-[19px]'>
                     <div className='flex flex-col gap-2 '>
                         <label className='text-[12px] font-medium'>From</label>
                         <DatePicker
@@ -192,7 +192,7 @@ export const Services = ({ searchService, setSearchService, serviceType, setServ
                         onChange={() => setSearchType("name")}
                         className="bg-transparent w-3 cursor-pointer border-gray-200"
                     />
-                    <span className="ml-2 text-nowrap">Search by name</span>
+                    <span className="ml-2 text-nowrap lg:text-[14px] text-[11px]">Search by name</span>
                 </label>
                 <label className="flex items-center">
                     <InputField
@@ -203,7 +203,7 @@ export const Services = ({ searchService, setSearchService, serviceType, setServ
                         onChange={() => setSearchType("tags")}
                         className="bg-transparent text-[14px] w-3 cursor-pointer border-gray-200"
                     />
-                    <span className="ml-2 text-nowrap">Search by tags</span>
+                    <span className="ml-2 text-nowrap lg:text-[14px] text-[11px]">Search by tags</span>
                 </label>
             </div>
             <div className='flex flex-col gap-y-2 relative'>

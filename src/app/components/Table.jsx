@@ -214,13 +214,13 @@ export const TableHeader = ({ searchPayer, setSearchPayer, handleColumnSelection
         <div className="py-5">
             <header className='h-[168px] w-full p-3'>
                 <h1 className='text-[#334155] text-[20px] font-semibold'>Waitlist</h1>
-                <div className='flex gap-x-5 py-5'>
+                <div className='md:flex hidden gap-x-5 py-5'>
                     <div className='text-[12px] font-semibold p-3 w-[359.33px] rounded-md border'>All Waitlists <span className='text-[10px] font-medium ml-2'>{TableData.length}</span></div>
                     <div className='text-[12px] font-semibold p-3 w-[359.33px] rounded-md border'>Newly Added <span className='text-[10px] font-medium ml-2'>30</span></div>
                     <div className='text-[12px] font-semibold p-3 w-[359.33px] rounded-md border'>Leads <span className='text-[10px] font-medium ml-2'>{TableData.filter(data => data.status == "Lead").length}</span></div>
                 </div>
             </header>
-            <div className='w-full flex justify-between relative'>
+            <div className='w-full flex flex-wrap gap-2 justify-between relative'>
                 <div className='flex cursor-pointer gap-x-3 bg-[#F1F5F9] p-2 rounded-md'>
                     <ImageView src="/assets/filter.svg" alt="filter" width={16} height={20} />
                     <p onClick={() => setShowFilter(!showFilter)} className='text-[12px] font-medium w-full h-full'>Add Filter</p>
