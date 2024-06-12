@@ -122,7 +122,7 @@ export const ScheduledDate = ({ startDate, setStartDate, endDate, setEndDate, or
                     name="orders"
                     value={order}
                     placeholder="All"
-                    className="lg:w-[350px] w-[225px] h-[40px] border border-[#E4E4E7] rounded-lg "
+                    className="lg:w-[320px] w-[150px] h-[40px] border border-[#E4E4E7] rounded-lg "
                     options={[
                         { label: "All", value: "All" },
                         { label: "Custom", value: "Custom" },
@@ -194,7 +194,7 @@ export const Services = ({ searchService, setSearchService, serviceType, setServ
 
     return (
         <div className='flex flex-col w-full p-3 gap-y-8'>
-            <div className='flex gap-x-5'>
+            <div className='flex lg:flex-row flex-col items-center gap-3'>
                 <label className="flex items-center">
                     <InputField
                         type="radio"
@@ -206,7 +206,7 @@ export const Services = ({ searchService, setSearchService, serviceType, setServ
                     />
                     <span className="ml-2 text-nowrap lg:text-[14px] text-[11px]">Search by name</span>
                 </label>
-                <label className="flex items-center">
+                <label className="flex items-center mr-1">
                     <InputField
                         type="radio"
                         name="searchType"
