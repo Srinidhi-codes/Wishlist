@@ -43,11 +43,17 @@ const Table = () => {
             if (filters.serviceStatus && !data.serviceStatus.toLowerCase().includes(filters.serviceStatus.toLowerCase())) {
                 match = false;
             }
-            if (filters.startDate && !moment(data.created).format('ddd MMM DD YYYY').includes(moment(filters.startDate).format('ddd MMM DD YYYY'))) {
-                match = false;
-            }
-            if (filters.endDate && !moment(data.scheduled).format('ddd MMM DD YYYY').includes(moment(filters.endDate).format('ddd MMM DD YYYY'))) {
-                match = false;
+            if (filters.startDate || filters.endDate) {
+                const createdDate = moment(data.created);
+                const startDate = filters.startDate ? moment(filters.startDate) : null;
+                const endDate = filters.endDate ? moment(filters.endDate) : null;
+
+                if (startDate && createdDate.isBefore(startDate, 'day')) {
+                    match = false;
+                }
+                if (endDate && createdDate.isAfter(endDate, 'day')) {
+                    match = false;
+                }
             }
             return match;
         });
