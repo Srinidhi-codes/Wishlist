@@ -9,7 +9,7 @@ import moment from 'moment';
 import EditColumn from './EditColumn';
 
 const Table = () => {
-    const [searchPayer, setSearchPayer] = useState('');
+    const [searchClient, setSearchClient] = useState('');
     const [selectedColumns, setSelectedColumns] = useState([
         'created',
         'payer',
@@ -33,6 +33,9 @@ const Table = () => {
                 if (!selectedPayers.includes(data.payer.toLowerCase())) {
                     match = false;
                 }
+            }
+            if (filters.searchClient && !data.payer.toLowerCase().includes(filters.searchClient.toLowerCase())) {
+                match = false;
             }
             if (filters.searchService && !data.services.toLowerCase().includes(filters.searchService.toLowerCase())) {
                 match = false;
@@ -62,8 +65,8 @@ const Table = () => {
     };
 
     useEffect(() => {
-        applyFilters({ searchPayer });
-    }, [searchPayer]);
+        applyFilters({ searchClient });
+    }, [searchClient]);
 
     const renderRows = () => {
         const indexOfLastItem = currentPage * itemsPerPage;
@@ -133,8 +136,8 @@ const Table = () => {
         <>
             <TableHeader
                 applyFilters={applyFilters}
-                searchPayer={searchPayer}
-                setSearchPayer={setSearchPayer}
+                searchClient={searchClient}
+                setSearchClient={setSearchClient}
                 handleColumnSelection={handleColumnSelection}
                 selectedColumns={selectedColumns}
                 setFilteredData={setFilteredData}
@@ -217,7 +220,7 @@ const Pagination = ({ itemsPerPage, totalItems, paginate, currentPage }) => {
 };
 
 
-export const TableHeader = ({ searchPayer, setSearchPayer, handleColumnSelection, selectedColumns, applyFilters, setFilteredData }) => {
+export const TableHeader = ({ searchClient, setSearchClient, handleColumnSelection, selectedColumns, applyFilters, setFilteredData }) => {
     const [showFilter, setShowFilter] = useState(false);
     const [showColumn, setShowColumn] = useState(false);
     return (
@@ -237,7 +240,7 @@ export const TableHeader = ({ searchPayer, setSearchPayer, handleColumnSelection
                     {showFilter && <Filter applyFilters={applyFilters} setShowFilter={setShowFilter} />}
                 </div>
                 <div className='flex gap-x-3 relative'>
-                    <InputField placeholder={"Search client"} value={searchPayer} onChange={(e) => setSearchPayer(e.target.value)} className={"rounded-md shadow-sm p-1 pl-9"} />
+                    <InputField placeholder={"Search client"} value={searchClient} onChange={(e) => setSearchClient(e.target.value)} className={"rounded-md shadow-sm p-1 pl-9"} />
                     <ImageView src="/assets/search.svg" alt="filter" className="absolute top-[0.6rem] left-3" width={15} height={20} />
                     <ImageView onClick={() => setFilteredData(TableData)} src="/assets/refresh.svg" className="cursor-pointer" alt="filter" width={40} height={20} />
                     <ImageView onClick={() => setShowColumn(!showColumn)} src="/assets/column.svg" className="cursor-pointer" alt="filter" width={40} height={20} />
