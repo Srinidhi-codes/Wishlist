@@ -26,9 +26,13 @@ const Table = () => {
 
     const applyFilters = (filters) => {
         let filteredData = TableData.filter((data) => {
+            console.log(filters)
             let match = true;
-            if (filters.searchPayer && !data.payer.toLowerCase().includes(filters.searchPayer.toLowerCase())) {
-                match = false;
+            if (filters.searchPayer && filters.searchPayer.length > 0) {
+                const selectedPayers = filters.searchPayer.split(", ").map(p => p.toLowerCase());
+                if (!selectedPayers.includes(data.payer.toLowerCase())) {
+                    match = false;
+                }
             }
             if (filters.searchService && !data.services.toLowerCase().includes(filters.searchService.toLowerCase())) {
                 match = false;
@@ -222,7 +226,7 @@ export const TableHeader = ({ searchPayer, setSearchPayer, handleColumnSelection
             </header>
             <div className='w-full flex flex-wrap gap-2 justify-between relative'>
                 <div className='flex cursor-pointer gap-x-3 bg-[#F1F5F9] p-2 rounded-md'>
-                    <ImageView src="/assets/filter.svg" alt="filter" width={16} height={20} />
+                    <ImageView onClick={() => setShowFilter(!showFilter)} src="/assets/filter.svg" alt="filter" width={16} height={20} />
                     <p onClick={() => setShowFilter(!showFilter)} className='text-[12px] font-medium w-full h-full'>Add Filter</p>
                     {showFilter && <Filter applyFilters={applyFilters} setShowFilter={setShowFilter} />}
                 </div>

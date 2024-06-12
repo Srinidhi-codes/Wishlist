@@ -19,13 +19,14 @@ const Filter = ({ applyFilters, setShowFilter }) => {
     const [order, setOrder] = useState("");
     const [serviceStatus, setServiceStatus] = useState("");
     const [selectedPayers, setSelectedPayers] = useState([]);
+    const [selectedService, setSelectedService] = useState([]);
 
     const applyFiltersHandler = () => {
         applyFilters({
             startDate,
             endDate,
             searchPayer: selectedPayers.join(", "),
-            searchService,
+            searchService: searchService,
             serviceType,
             order,
             serviceStatus
@@ -43,7 +44,7 @@ const Filter = ({ applyFilters, setShowFilter }) => {
         setSelectedPayers([]);
         selectFilterMethod("Scheduled Date");
     };
-
+    console.log(selectedService)
     const handlePayerCheckboxChange = (payer) => {
         setSelectedPayers((prevSelected) => {
             if (prevSelected.includes(payer)) {
@@ -52,6 +53,17 @@ const Filter = ({ applyFilters, setShowFilter }) => {
                 return [...prevSelected, payer];
             }
         });
+
+    };
+    const handleServiceCheckbox = (service) => {
+        setSelectedService((prevSelected) => {
+            if (prevSelected.includes(service)) {
+                return prevSelected.filter((item) => item !== service);
+            } else {
+                return [...prevSelected, service];
+            }
+        });
+
     };
 
     const filterType = [
@@ -88,7 +100,7 @@ const Filter = ({ applyFilters, setShowFilter }) => {
                         order={order}
                         setOrder={setOrder} />}
                     {filterMethod === "People" && <People searchPayer={searchPayer} setSearchPayer={setSearchPayer} selectedPayers={selectedPayers} handlePayerCheckboxChange={handlePayerCheckboxChange} />}
-                    {filterMethod === "Services/Products" && <Services searchService={searchService} setSearchService={setSearchService} serviceType={serviceType} setServiceType={setServiceType} setServiceStatus={setServiceStatus} serviceStatus={serviceStatus} />}
+                    {filterMethod === "Services/Products" && <Services searchService={searchService} setSearchService={setSearchService} serviceType={serviceType} setServiceType={setServiceType} setServiceStatus={setServiceStatus} serviceStatus={serviceStatus} selectedService={selectedService} handleServiceCheckbox={handleServiceCheckbox} />}
                 </div>
                 <div className='border-t flex justify-end px-2 gap-x-4 p-2 bg-white'>
                     <button onClick={resetFilters} className='bg-[#F4F4F5] text-[14px] font-medium px-3 py-2 rounded-lg'>Reset to default</button>
@@ -177,7 +189,7 @@ const People = ({ searchPayer, setSearchPayer, selectedPayers, handlePayerCheckb
     </div>
 );
 
-export const Services = ({ searchService, setSearchService, serviceType, setServiceType, serviceStatus, setServiceStatus }) => {
+export const Services = ({ searchService, setSearchService, serviceType, setServiceType, serviceStatus, setServiceStatus, selectedService, handleServiceCheckbox }) => {
     const [searchType, setSearchType] = useState("name");
 
     return (
@@ -223,8 +235,9 @@ export const Services = ({ searchService, setSearchService, serviceType, setServ
                                     <div key={data.id} className='flex items-center gap-x-2 w-full'>
                                         <input
                                             type="checkbox"
-                                            name={`myCheckbox`}
-                                            value="true"
+                                            name={`payer-${data.id}`}
+                                            checked={selectedService.includes(data.services)}
+                                            onChange={() => handleServiceCheckbox(data.services)}
                                             className="bg-transparent w-3 h-3 cursor-pointer border-2 border-red-1000"
                                         />
                                         <p className='text-[14px] font-medium mr-8'>{data.services}</p>
